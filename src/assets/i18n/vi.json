@@ -1,0 +1,13 @@
+{
+    "PROFILE": {
+        "ONLINE": "Đang hoạt động",
+        "JOIN": "Tham gia",
+        "ABOUT_ME": "Giới thiệu về tôi",
+        "EDUCATION": "Học vấn",
+        "WORK_EXPERIENCE": "Kinh nghiệm làm việc",
+        "SKILLS": "Kĩ năng",
+        "FOREIGN_LANGUAGE": "Ngoại ngữ",
+        "PROJECTS": "Dự án",
+        "AWARDS": "Giải thưởng"
+    }
+}

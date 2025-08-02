@@ -14,7 +14,7 @@ export class ApiPrefixInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (request.url.startsWith('http')) {
+    if (request.url.startsWith('http') || request.url.startsWith('assets/') || request.url.startsWith('./assets/')) {
       return next.handle(request);
     }
     const fullUrl = `${environment.apiUrl}/${request.url}`;

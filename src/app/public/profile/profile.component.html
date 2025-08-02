@@ -1,56 +1,161 @@
-<!-- profile.component.html -->
-<div class="p-card shadow-2 p-4 grid md:grid-cols-[auto,1fr] gap-6 card">
-  <!-- Left Column: Avatar + Status -->
-  <div class="flex flex-col items-center md:items-start gap-3 min-w-[120px]">
-    <div class="relative w-28 h-28">
-      <img [src]="user.avatar" alt="Avatar"
-        class="rounded-full w-full h-full border-4 border-surface-0 shadow-3 object-cover" />
-      <!-- <p-tag value="Online" class="bg-success text-white text-xs px-2 py-1 absolute bottom-0 right-0 " rounded></p-tag> -->
-      <span
-        class="absolute bottom-0 right-0 translate-x-[-20%] translate-y-[20%] bg-green-500 text-white text-xs px-2 py-0.5 rounded-full shadow">
-        Online
+<div>
+  <!-- profile.component.html -->
+  <div class="p-card shadow-2 p-4 grid md:grid-cols-[auto,1fr] gap-6 card">
+    <!-- Left Column: Avatar + Status -->
+    <div class="flex flex-col items-center md:items-start gap-3 min-w-[120px]">
+      <div class="relative w-28 h-28">
+        <img [src]="user.avatar" alt="Avatar"
+          class="rounded-full w-full h-full border-4 border-surface-0 shadow-3 object-cover" />
+        <!-- <p-tag value="Online" class="bg-success text-white text-xs px-2 py-1 absolute bottom-0 right-0 " rounded></p-tag> -->
+        <span
+          class="absolute bottom-0 right-0 translate-x-[-20%] translate-y-[20%] bg-green-500 text-white text-xs px-2 py-0.5 rounded-full shadow">
+          Online
+        </span>
+      </div>
+    </div>
+
+    <!-- Right Column: Info -->
+    <div class="space-y-4 pl-2">
+      <div>
+        <div class="justify-between flex items-center gap-2">
+          <h2 class="text-2xl  layout-menuitem-root-text">{{ user.name }} ({{ user.nickName}})</h2>
+          <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
+        </div>
+        <p class="text-primary text-sm text-muted-color">{{ user.role }}</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-envelope text-primary"></i>
+          <span class="text-muted-color">{{ user.email }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-phone text-primary"></i>
+          <span class="text-muted-color">{{ user.phone }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-map-marker text-primary"></i>
+          <span class="text-muted-color">{{ user.address }}</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-calendar text-primary"></i>
+          <span class="text-muted-color">Tham gia: {{ user.joinedAt | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <p class="text-sm text-gray-600 italic text-muted-color">
+          “{{ user.bio }}”
+        </p>
+      </div>
+    </div>
+
+    <!-- 👇 Thêm div ở dưới toàn bộ nội dung -->
+    <div class="col-span-2 border-t pt-4 mt-6 text-sm text-muted text-muted-color text-center">
+      <p>Thông tin bổ sung hoặc footer profile ở đây.</p>
+    </div>
+  </div>
+
+  <div class="card p-card shadow-2 p4 gap-6">
+    <div class="justify-between items-center gap-2 flex col-span-2 border-b pt-4 text-sm text-muted text-center">
+      <h2 class="text-2xl  layout-menuitem-root-text">
+        {{'PROFILE.ABOUT_ME' | translate }}
+      </h2>
+      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
+    </div>
+    <div class="p-4 space-y-2 text-sm text-surface-900 dark:text-surface-0">
+      {{user.aboutMe}}
+    </div>
+  </div>
+
+  <div class="card p-card shadow-2 p4 gap-6">
+    <div class="justify-between items-center gap-2 flex col-span-2 border-b pt-4 text-sm text-muted text-center">
+      <h2 class="text-2xl  layout-menuitem-root-text">
+        {{'PROFILE.EDUCATION' | translate }}
+      </h2>
+      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
+    </div>
+    <div class="p-4 space-y-2 text-sm text-gray-700">
+      <div *ngFor="let edu of user.education">
+        <b class="text-surface-900 dark:text-surface-0">{{ edu.degree }}</b>
+        <p class="text-muted-color text-surface-900 dark:text-surface-400 pl-4">{{ edu.school }} ({{ edu.startYear }} - {{ edu.endYear }})</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-card shadow-2 p4 gap-6">
+    <div class="justify-between items-center gap-2 flex col-span-2 border-b pt-4 text-sm text-muted text-center">
+      <h2 class="text-2xl layout-menuitem-root-text">
+        {{'PROFILE.WORK_EXPERIENCE' | translate }}
+      </h2>
+      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
+    </div>
+    <div class="p-4 space-y-2 text-sm text-gray-700">
+      <div *ngFor="let job of user.workExperience">
+        <b class="text-surface-900 dark:text-surface-0">{{ job.position }} - {{ job.company }}</b>
+        <span class="text-muted-color text-surface-900 dark:text-surface-200 pl-1">({{ job.startDate }} → {{ job.endDate }})</span>
+        <p class="pl-4 text-muted-color text-surface-900 dark:text-surface-400">{{ job.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-card shadow-2 p4 gap-6">
+    <div class="justify-between items-center gap-2 flex col-span-2 border-b pt-4 text-sm text-muted text-center">
+      <h2 class="text-2xl layout-menuitem-root-text">
+        {{'PROFILE.SKILLS' | translate }}
+      </h2>
+      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
+    </div>
+    <div class="p-4 flex flex-wrap gap-2 text-sm text-gray-700">
+      <span *ngFor="let skill of user.skills" class="p-button text-blue-800 px-3 py-1 rounded-full text-xs">
+        {{ skill }}
       </span>
     </div>
   </div>
 
-  <!-- Right Column: Info -->
-  <div class="space-y-4 pl-2">
-    <div>
-      <div class="justify-between flex items-center gap-2">
-        <h2 class="text-2xl font-semibold layout-menuitem-root-text">{{ user.name }}</h2>
-        <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
-      </div>
-      <p class="text-primary text-sm text-muted-color">{{ user.role }}</p>
+  <div class="card p-card shadow-2 p4 gap-6">
+    <div class="justify-between items-center gap-2 flex col-span-2 border-b pt-4 text-sm text-muted text-center">
+      <h2 class="text-2xl  layout-menuitem-root-text">
+        {{'PROFILE.FOREIGN_LANGUAGE' | translate }}
+      </h2>
+      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
     </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-      <div class="flex items-center gap-2">
-        <i class="pi pi-envelope text-primary"></i>
-        <span class="text-muted-color">{{ user.email }}</span>
+    <div class="p-4 space-y-1 text-sm text-gray-700">
+      <div *ngFor="let lang of user.foreignLanguages">
+        <p class="text-surface-900 dark:text-surface-0">{{ lang.language }} – <span class="text-muted-color text-surface-900 dark:text-surface-400 pl-1">{{ lang.level }}</span></p>
       </div>
-      <div class="flex items-center gap-2">
-        <i class="pi pi-phone text-primary"></i>
-        <span class="text-muted-color">{{ user.phone }}</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <i class="pi pi-map-marker text-primary"></i>
-        <span class="text-muted-color">{{ user.address }}</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <i class="pi pi-calendar text-primary"></i>
-        <span class="text-muted-color">Tham gia: {{ user.joinedAt | date:'dd/MM/yyyy' }}</span>
-      </div>
-    </div>
-
-    <div class="pt-2">
-      <p class="text-sm text-gray-600 italic text-muted-color">
-        “{{ user.bio }}”
-      </p>
     </div>
   </div>
 
-  <!-- 👇 Thêm div ở dưới toàn bộ nội dung -->
-  <div class="col-span-2 border-t pt-4 mt-6 text-sm text-muted text-center">
-    <p>Thông tin bổ sung hoặc footer profile ở đây.</p>
+  <div class="card p-card shadow-2 p4 gap-6">
+    <div class="justify-between items-center gap-2 flex col-span-2 border-b pt-4 text-sm text-muted text-center">
+      <h2 class="text-2xl  layout-menuitem-root-text">
+        {{'PROFILE.PROJECTS' | translate }}
+      </h2>
+      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
+    </div>
+    <div class="p-4 space-y-3 text-sm text-gray-700">
+      <div *ngFor="let project of user.projects">
+        <b class="text-surface-900 dark:text-surface-0">{{ project.name }}</b>
+        <span class="text-muted-color text-surface-900 dark:text-surface-200 pl-1">({{ project.technologies.join(', ') }})</span>
+        <span class="text-muted-color text-surface-900 dark:text-surface-400 pl-4 block">{{ project.description }}</span>
+      </div>
+    </div>
   </div>
+
+  <div class="card p-card shadow-2 p4 gap-6">
+    <div class="justify-between items-center gap-2 flex col-span-2 border-b pt-4 text-sm text-muted text-center">
+      <h2 class="text-2xl  layout-menuitem-root-text">
+        {{'PROFILE.AWARDS' | translate }}
+      </h2>
+      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
+    </div>
+    <div class="p-4 space-y-2 text-sm text-gray-700">
+      <div *ngFor="let award of user.awards">
+        <b class="text-surface-900 dark:text-surface-0">{{ award.issuer }}</b>
+        <p class="pl-4 text-muted-color text-surface-900 dark:text-surface-400">{{ award.title }}</p>
+      </div>
+    </div>
+  </div>
+
 </div>
