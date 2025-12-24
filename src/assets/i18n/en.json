@@ -1,1 +1,50 @@
-
+{
+    "PROFILE": {
+        "ONLINE": "Online",
+        "JOIN": "Joined",
+        "ABOUT_ME": "About Me",
+        "EDUCATION": "Education",
+        "WORK_EXPERIENCE": "Work Experience",
+        "SKILLS": "Skills",
+        "FOREIGN_LANGUAGE": "Foreign Languages",
+        "PROJECTS": "Projects",
+        "AWARDS": "Awards",
+        "FULL_NAME": "Full Name",
+        "NICKNAME": "Nickname",
+        "PHONE": "Phone Number",
+        "EMAIL": "Email",
+        "ADDRESS": "Address",
+        "SLOGAN": "Slogan",
+        "EDIT_PROFILE": "Edit Profile",
+        "ROLE": "Role",
+        "LEVEL": "Level",
+        "BIRTHDAY": "Birthday",
+        "SAVE": "Save",
+        "CANCEL": "Cancel"
+    },
+    "NOTIFY": {
+        "INFO": "Information",
+        "WARN": "Warning",
+        "ERROR": "Error",
+        "SUCCESS": "Success",
+        "UPDATE_SUCCESS": "Update successful",
+        "UPDATE_FAIL": "Update failed",
+        "EVALUATE_SUCCESS": "Profile evaluation successful",
+        "EVALUATE_FAIL": "Profile evaluation failed"
+    },
+    "SKILL_LEVEL": {
+        "BEGINNER": "Beginner",
+        "INTERMEDIATE": "Intermediate",
+        "ADVANCED": "Advanced",
+        "EXPERT": "Expert"
+    },
+    "LANGUAGE_LEVEL": {
+        "A1": "Elementary",
+        "A2": "Pre-intermediate",
+        "B1": "Intermediate",
+        "B2": "Upper-intermediate",
+        "C1": "Advanced",
+        "C2": "Proficient",
+        "NATIVE": "Native"
+    }
+}

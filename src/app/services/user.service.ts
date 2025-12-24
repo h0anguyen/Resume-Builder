@@ -8,20 +8,23 @@ import { tap, catchError } from 'rxjs/operators';
 export class UserService {
   constructor(private http: HttpClient) {}
 
-getUser(id: string): Observable<User> {
-  return this.http.get<User>(`users/${id}`).pipe(
-    tap((data) => {
-      console.log('User data:', data);
-    }),
-    catchError((error) => {
-      console.error('Error fetching user:', error);
-      throw error;
-    })
-  );
-}
-
+  getUser(id: string): Observable<User> {
+    return this.http.get<User>(`users/${id}`).pipe(
+      tap((data) => {
+        console.log('User data:', data);
+      }),
+      catchError((error) => {
+        console.error('Error fetching user:', error);
+        throw error;
+      })
+    );
+  }
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>('users');
+  }
+
+  updateUser(id: string, userData: Partial<User>): Observable<User> {
+    return this.http.put<User>(`users/${id}`, userData);
   }
 }

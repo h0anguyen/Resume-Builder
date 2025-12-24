@@ -5,7 +5,7 @@ import { provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScroll
 import Aura from '@primeng/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 import { appRoutes } from './app.routes';
-import { provideNgxTranslate } from './app/translate.providers';
+import { provideNgxTranslate } from './app/config/translate.providers';
 
 export const appConfig: ApplicationConfig = {
     providers: [

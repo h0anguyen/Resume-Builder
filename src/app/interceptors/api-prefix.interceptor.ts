@@ -6,8 +6,8 @@ import {
   HttpEvent
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
-
+import { environment } from '../../environments/production';
+// import { environment } from '../../environments/development';
 @Injectable()
 export class ApiPrefixInterceptor implements HttpInterceptor {
   intercept(

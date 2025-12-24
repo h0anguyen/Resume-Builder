@@ -9,6 +9,8 @@ import { appConfig } from './app.config';
 import { importProvidersFrom } from '@angular/core';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { MessageService } from 'primeng/api';
+import { CacheInterceptor } from './app/interceptors/cache.interceptor';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -25,6 +27,11 @@ bootstrapApplication(AppComponent, {
       useClass: ApiPrefixInterceptor,
       multi: true
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CacheInterceptor,   // ✅ thêm interceptor cache
+      multi: true
+    },
     importProvidersFrom(
       TranslateModule.forRoot({
         defaultLanguage: 'vi',
@@ -33,7 +40,8 @@ bootstrapApplication(AppComponent, {
           useFactory: createTranslateLoader,
           deps: [HttpClient]
         }
-      })
-    )
+      }),
+    ),
+    MessageService
   ]
 });

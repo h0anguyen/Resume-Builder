@@ -8,6 +8,43 @@
         "SKILLS": "Kĩ năng",
         "FOREIGN_LANGUAGE": "Ngoại ngữ",
         "PROJECTS": "Dự án",
-        "AWARDS": "Giải thưởng"
+        "AWARDS": "Giải thưởng",
+        "FULL_NAME":"Họ và tên",
+        "NICKNAME":"Biệt danh",
+        "PHONE":"Số điện thoại",
+        "EMAIL":"Email",
+        "ADDRESS":"Địa chỉ",
+        "SLOGAN":"Khẩu hiệu",
+        "EDIT_PROFILE":"Chỉnh sửa hồ sơ",
+        "ROLE":"Vai trò",
+        "LEVEL":"Cấp độ",
+        "BIRTHDAY":"Ngày sinh",
+        "SAVE":"Lưu",
+        "CANCEL":"Hủy"
+    },
+    "NOTIFY": {
+        "INFO":"Thông tin",
+        "WARN":"Cảnh báo",
+        "ERROR":"Lỗi",
+        "SUCCESS":"Thành công",
+        "UPDATE_SUCCESS":"Cập nhật thành công",
+        "UPDATE_FAIL":"Cập nhật thất bại",
+        "EVALUATE_SUCCESS":"Đánh giá hồ sơ thành công",
+        "EVALUATE_FAIL":"Đánh giá hồ sơ thất bại"
+    },
+    "SKILL_LEVEL": {
+        "BEGINNER": "Mới bắt đầu",
+        "INTERMEDIATE": "Trung cấp",
+        "ADVANCED": "Nâng cao",
+        "EXPERT": "Chuyên gia"
+    },
+    "LANGUAGE_LEVEL": {
+        "A1": "Sơ cấp",
+        "A2": "Tiền trung cấp",
+        "B1": "Trung cấp",
+        "B2": "Trung cấp cao",
+        "C1": "Cao cấp",
+        "C2": "Thành thạo",
+        "NATIVE": "Bản ngữ"
     }
 }

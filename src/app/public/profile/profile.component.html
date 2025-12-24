@@ -18,10 +18,16 @@
     <div class="space-y-4 pl-2">
       <div>
         <div class="justify-between flex items-center gap-2">
-          <h2 class="text-2xl  layout-menuitem-root-text">{{ user.name }} ({{ user.nickName}})</h2>
-          <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
+          <div class="flex items-start gap-2">
+            <h2 class="text-2xl layout-menuitem-root-text">{{ user.name }} ({{ user.nickName}})</h2>
+              <button (click)="evaluateProfile()" class="p-button text-blue-800 px-3 py-1 rounded-full text-xs" [disabled]="loading">
+              AI đánh giá 
+              </button>
+          </div>
+          <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"
+            (click)="openModalEditProfile()"></button>
         </div>
-        <p class="text-primary text-sm text-muted-color">{{ user.role }}</p>
+        <p class="text-primary text-sm text-muted-color">{{ user.role }}, {{ user.level }}</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
@@ -51,8 +57,111 @@
     </div>
 
     <!-- 👇 Thêm div ở dưới toàn bộ nội dung -->
-    <div class="col-span-2 border-t pt-4 mt-6 text-sm text-muted text-muted-color text-center">
-      <p>Thông tin bổ sung hoặc footer profile ở đây.</p>
+    <div *ngIf="user.AIEvaluate" class="col-span-2 border-t pt-4 mt-6 text-sm text-muted text-muted-color text-center">
+      <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+          <h3 class="text-xl font-semibold layout-menuitem-root-text flex items-center gap-2">
+            <i class="pi pi-chart-line text-primary"></i>
+            Đánh giá Profile bởi AI
+          </h3>
+          <span class="text-sm text-muted-color">
+            {{ user.AIEvaluate.update_time | date:'dd/MM/yyyy' }}
+          </span>
+        </div>
+
+        <!-- Overall Score -->
+        <div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-muted-color">Tổng điểm</span>
+            <span class="text-3xl font-bold text-primary">{{ user.AIEvaluate.total_score }}/100</span>
+          </div>
+          <p-progressBar [value]="user.AIEvaluate.total_score" [showValue]="false"></p-progressBar>
+          <div class="mt-2 text-right">
+            <span class="text-xs px-2 py-1 rounded-full" 
+                  [ngClass]="{
+                    'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200': user.AIEvaluate.ats_readiness === 'Tốt',
+                    'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200': user.AIEvaluate.ats_readiness === 'Trung bình',
+                    'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200': user.AIEvaluate.ats_readiness === 'Kém'
+                  }">
+              ATS: {{ user.AIEvaluate.ats_readiness }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Section Scores -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-4 text-center">
+            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              {{ user.AIEvaluate.section_scores.education }}
+            </div>
+            <div class="text-xs text-muted-color mt-1">Học vấn</div>
+          </div>
+          <div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-4 text-center">
+            <div class="text-2xl font-bold text-green-600 dark:text-green-400">
+              {{ user.AIEvaluate.section_scores.experience }}
+            </div>
+            <div class="text-xs text-muted-color mt-1">Kinh nghiệm</div>
+          </div>
+          <div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-4 text-center">
+            <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+              {{ user.AIEvaluate.section_scores.skills }}
+            </div>
+            <div class="text-xs text-muted-color mt-1">Kỹ năng</div>
+          </div>
+          <div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-4 text-center">
+            <div class="text-2xl font-bold text-orange-600 dark:text-orange-400">
+              {{ user.AIEvaluate.section_scores.projects }}
+            </div>
+            <div class="text-xs text-muted-color mt-1">Dự án</div>
+          </div>
+        </div>
+
+        <!-- Strengths -->
+        <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+          <h4 class="font-semibold text-green-800 dark:text-green-200 mb-3 flex items-center gap-2">
+            <i class="pi pi-check-circle"></i>
+            Điểm mạnh
+          </h4>
+          <ul class="space-y-2">
+            <li *ngFor="let strength of user.AIEvaluate.strengths" 
+                class="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-200">
+              <i class="pi pi-angle-right text-green-600 dark:text-green-400 mt-0.5"></i>
+              <span>{{ strength }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Weaknesses -->
+        <div class="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4">
+          <h4 class="font-semibold text-orange-800 dark:text-orange-200 mb-3 flex items-center gap-2">
+            <i class="pi pi-exclamation-triangle"></i>
+            Điểm cần cải thiện
+          </h4>
+          <ul class="space-y-2">
+            <li *ngFor="let weakness of user.AIEvaluate.weaknesses" 
+                class="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-200">
+              <i class="pi pi-angle-right text-orange-600 dark:text-orange-400 mt-0.5"></i>
+              <span>{{ weakness }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+          <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-3 flex items-center gap-2">
+            <i class="pi pi-lightbulb"></i>
+            Đề xuất cải thiện
+          </h4>
+          <ul class="space-y-2">
+            <li *ngFor="let suggestion of user.AIEvaluate.suggestions" 
+                class="flex items-start gap-2 text-sm text-surface-700 dark:text-surface-200">
+              <i class="pi pi-angle-right text-blue-600 dark:text-blue-400 mt-0.5"></i>
+              <span>{{ suggestion }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -78,7 +187,8 @@
     <div class="p-4 space-y-2 text-sm text-gray-700">
       <div *ngFor="let edu of user.education">
         <b class="text-surface-900 dark:text-surface-0">{{ edu.degree }}</b>
-        <p class="text-muted-color text-surface-900 dark:text-surface-400 pl-4">{{ edu.school }} ({{ edu.startYear }} - {{ edu.endYear }})</p>
+        <p class="text-muted-color text-surface-900 dark:text-surface-400 pl-4">{{ edu.school }} ({{ edu.startDate | date:'dd/MM/yyyy' }} -
+          {{ edu.endDate | date:'dd/MM/yyyy' }})</p>
       </div>
     </div>
   </div>
@@ -93,7 +203,7 @@
     <div class="p-4 space-y-2 text-sm text-gray-700">
       <div *ngFor="let job of user.workExperience">
         <b class="text-surface-900 dark:text-surface-0">{{ job.position }} - {{ job.company }}</b>
-        <span class="text-muted-color text-surface-900 dark:text-surface-200 pl-1">({{ job.startDate }} → {{ job.endDate }})</span>
+        <span class="text-muted-color text-surface-900 dark:text-surface-200 pl-1">({{ job.startDate | date:'dd/MM/yyyy' }} → {{ job.endDate | date:'dd/MM/yyyy' }})</span>
         <p class="pl-4 text-muted-color text-surface-900 dark:text-surface-400">{{ job.description }}</p>
       </div>
     </div>
@@ -104,14 +214,30 @@
       <h2 class="text-2xl layout-menuitem-root-text">
         {{'PROFILE.SKILLS' | translate }}
       </h2>
-      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
+      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary" (click)="openModalEditProfile()"></button>
     </div>
-    <div class="p-4 flex flex-wrap gap-2 text-sm text-gray-700">
-      <span *ngFor="let skill of user.skills" class="p-button text-blue-800 px-3 py-1 rounded-full text-xs">
-        {{ skill }}
-      </span>
+    <div class="p-4 flex flex-wrap gap-3 text-sm">
+      <div *ngFor="let skill of user.skills" class="flex flex-col gap-1">
+        <div class="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-lg">
+          <span class="font-medium text-surface-900 dark:text-surface-0">{{ skill.skill }}</span>
+          <span *ngIf="skill.level" 
+                class="text-xs px-2 py-0.5 rounded-full"
+                [ngClass]="{
+                  'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200': skill.level === 'Expert',
+                  'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200': skill.level === 'Advanced',
+                  'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200': skill.level === 'Intermediate',
+                  'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200': skill.level === 'Beginner'
+                }">
+            {{ skill.level }}
+          </span>
+        </div>
+        <p *ngIf="skill.description" class="text-xs text-muted-color px-2 max-w-xs">
+          {{ skill.description }}
+        </p>
+      </div>
     </div>
   </div>
+
 
   <div class="card p-card shadow-2 p4 gap-6">
     <div class="justify-between items-center gap-2 flex col-span-2 border-b pt-4 text-sm text-muted text-center">
@@ -122,7 +248,8 @@
     </div>
     <div class="p-4 space-y-1 text-sm text-gray-700">
       <div *ngFor="let lang of user.foreignLanguages">
-        <p class="text-surface-900 dark:text-surface-0">{{ lang.language }} – <span class="text-muted-color text-surface-900 dark:text-surface-400 pl-1">{{ lang.level }}</span></p>
+        <p class="text-surface-900 dark:text-surface-0">{{ lang.language }} – <span
+            class="text-muted-color text-surface-900 dark:text-surface-400 pl-1">{{ lang.level }}</span></p>
       </div>
     </div>
   </div>
@@ -137,8 +264,10 @@
     <div class="p-4 space-y-3 text-sm text-gray-700">
       <div *ngFor="let project of user.projects">
         <b class="text-surface-900 dark:text-surface-0">{{ project.name }}</b>
-        <span class="text-muted-color text-surface-900 dark:text-surface-200 pl-1">({{ project.technologies.join(', ') }})</span>
-        <span class="text-muted-color text-surface-900 dark:text-surface-400 pl-4 block">{{ project.description }}</span>
+        <span class="text-muted-color text-surface-900 dark:text-surface-200 pl-1">({{ project.technologies.join(', ')
+          }})</span>
+        <span class="text-muted-color text-surface-900 dark:text-surface-400 pl-4 block">{{ project.description
+          }}</span>
       </div>
     </div>
   </div>
@@ -157,5 +286,281 @@
       </div>
     </div>
   </div>
+
+  <!-- modal edit profile -->
+<div class="card">
+  <!-- Modal Edit Profile - Tất cả trong một -->
+  <p-dialog header="{{'PROFILE.EDIT_PROFILE' | translate}}" [(visible)]="displayProfile" [breakpoints]="breakpointsProfile" [style]="{width: '80vw', maxHeight: '90vh'}" [modal]="true" [draggable]="false">
+    <!-- Thông tin cơ bản -->
+    <div class="flex flex-col md:flex-row gap-4 mb-6">
+      <div class="md:w-1/3">
+        <div class="flex flex-col items-center gap-3 min-w-[120px]">
+          <div class="relative w-40 h-40">
+            <img [src]="user.avatar" alt="Avatar" class="rounded-full w-full h-full border-4 border-surface-0 shadow-3 object-cover" />
+          </div>
+        </div>
+      </div>
+      <div class="md:w-2/3">
+        <div class="card flex flex-col gap-4 !p-0">
+          <div class="flex flex-col gap-2">
+            <label for="name">{{'PROFILE.FULL_NAME' | translate}}:</label>
+            <input pInputText id="name" type="text" [(ngModel)]="dataUpdate.name" />
+          </div>
+          <div class="flex flex-wrap gap-6">
+            <div class="flex flex-col grow basis-0 gap-2">
+              <label for="nickName">{{'PROFILE.NICKNAME' | translate}}:</label>
+              <input pInputText id="nickName" type="text" [(ngModel)]="dataUpdate.nickName" />
+            </div>
+            <div class="flex flex-col grow basis-0 gap-2">
+              <label for="role">{{'PROFILE.ROLE' | translate}}:</label>
+              <input pInputText id="role" type="text" [(ngModel)]="dataUpdate.role" />
+            </div>
+            <div class="flex flex-col grow basis-0 gap-2">
+              <label for="level">{{'PROFILE.LEVEL' | translate}}:</label>
+              <input pInputText id="level" type="text" [(ngModel)]="dataUpdate.level" />
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="email">Email:</label>
+            <input pInputText id="email" type="text" [(ngModel)]="dataUpdate.email" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="phone">{{'PROFILE.PHONE' | translate}}:</label>
+            <input pInputText id="phone" type="text" [(ngModel)]="dataUpdate.phone" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="address">{{'PROFILE.ADDRESS' | translate}}:</label>
+            <input pInputText id="address" type="text" [(ngModel)]="dataUpdate.address" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="bio">{{'PROFILE.SLOGAN' | translate}}:</label>
+            <textarea pInputTextarea id="bio" rows="3" [(ngModel)]="dataUpdate.bio"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Giới thiệu bản thân -->
+    <div class="border-t pt-4 mb-4">
+      <div class="flex items-center gap-2 mb-3 cursor-pointer" (click)="toggleSection('aboutMe')">
+        <i class="pi text-lg" [ngClass]="expandedSections.aboutMe ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+        <h3 class="text-lg font-semibold">{{'PROFILE.ABOUT_ME' | translate}}</h3>
+      </div>
+      <div *ngIf="expandedSections.aboutMe" class="flex flex-col gap-2 pl-6">
+        <label for="aboutMe">{{'PROFILE.ABOUT_ME' | translate}}:</label>
+        <textarea pInputTextarea id="aboutMe" rows="5" [(ngModel)]="dataUpdate.aboutMe" placeholder="Giới thiệu về bản thân..."></textarea>
+      </div>
+    </div>
+
+    <!-- Học vấn -->
+    <div class="border-t pt-4 mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="flex items-center gap-2 cursor-pointer" (click)="toggleSection('education')">
+          <i class="pi text-lg" [ngClass]="expandedSections.education ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+          <h3 class="text-lg font-semibold">{{'PROFILE.EDUCATION' | translate}}</h3>
+        </div>
+        <button pButton icon="pi pi-plus" class="p-button-sm" label="Thêm" (click)="addEducation()"></button>
+      </div>
+      <div *ngIf="expandedSections.education" class="pl-6">
+        <div *ngFor="let edu of dataUpdate.education; let i = index" class="bg-surface-50 dark:bg-surface-800 p-3 rounded mb-2">
+          <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">Học vấn {{i + 1}}</h4>
+            <button pButton icon="pi pi-trash" class="p-button-sm p-button-text p-button-danger" (click)="removeEducation(i)"></button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="flex flex-col gap-2">
+              <label>Bằng cấp:</label>
+              <input pInputText type="text" [(ngModel)]="edu.degree" placeholder="Ví dụ: Cử nhân CNTT" />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>Trường:</label>
+              <input pInputText type="text" [(ngModel)]="edu.school" placeholder="Ví dụ: ĐH Bách Khoa" />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>Năm bắt đầu:</label>
+              <p-datepicker [(ngModel)]="edu.startDate" view="year" dateFormat="yy" [showIcon]="true" placeholder="Chọn năm"></p-datepicker>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>Năm kết thúc:</label>
+              <p-datepicker [(ngModel)]="edu.endDate" view="year" dateFormat="yy" [showIcon]="true" placeholder="Chọn năm"></p-datepicker>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kinh nghiệm làm việc -->
+    <div class="border-t pt-4 mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="flex items-center gap-2 cursor-pointer" (click)="toggleSection('workExperience')">
+          <i class="pi text-lg" [ngClass]="expandedSections.workExperience ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+          <h3 class="text-lg font-semibold">{{'PROFILE.WORK_EXPERIENCE' | translate}}</h3>
+        </div>
+        <button pButton icon="pi pi-plus" class="p-button-sm" label="Thêm" (click)="addWorkExperience()"></button>
+      </div>
+      <div *ngIf="expandedSections.workExperience" class="pl-6">
+        <div *ngFor="let work of dataUpdate.workExperience; let i = index" class="bg-surface-50 dark:bg-surface-800 p-3 rounded mb-2">
+          <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">Kinh nghiệm {{i + 1}}</h4>
+            <button pButton icon="pi pi-trash" class="p-button-sm p-button-text p-button-danger" (click)="removeWorkExperience(i)"></button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="flex flex-col gap-2">
+              <label>Vị trí:</label>
+              <input pInputText type="text" [(ngModel)]="work.position" placeholder="Ví dụ: Frontend Developer" />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>Công ty:</label>
+              <input pInputText type="text" [(ngModel)]="work.company" placeholder="Ví dụ: FPT Software" />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>Từ ngày:</label>
+              <p-datepicker [(ngModel)]="work.startDate" dateFormat="mm/yy" view="month" [showIcon]="true" placeholder="Chọn tháng/năm"></p-datepicker>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>Đến ngày:</label>
+              <p-datepicker [(ngModel)]="work.endDate" dateFormat="mm/yy" view="month" [showIcon]="true" placeholder="Hiện tại"></p-datepicker>
+            </div>
+            <div class="flex flex-col gap-2 md:col-span-2">
+              <label>Mô tả:</label>
+              <textarea pInputTextarea rows="3" [(ngModel)]="work.description" placeholder="Mô tả công việc..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kỹ năng -->
+    <div class="border-t pt-4 mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="flex items-center gap-2 cursor-pointer" (click)="toggleSection('skills')">
+          <i class="pi text-lg" [ngClass]="expandedSections.skills ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+          <h3 class="text-lg font-semibold">{{'PROFILE.SKILLS' | translate}}</h3>
+        </div>
+        <button pButton icon="pi pi-plus" class="p-button-sm" label="Thêm" (click)="addSkill()"></button>
+      </div>
+      <div *ngIf="expandedSections.skills" class="pl-6">
+        <div *ngFor="let skill of dataUpdate.skills; let i = index" class="bg-surface-50 dark:bg-surface-800 p-3 rounded mb-2">
+          <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">Kỹ năng {{i + 1}}</h4>
+            <button pButton icon="pi pi-trash" class="p-button-sm p-button-text p-button-danger" (click)="removeSkill(i)"></button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="flex flex-col gap-2">
+              <label>Tên kỹ năng:</label>
+              <input pInputText type="text" [(ngModel)]="skill.skill" placeholder="Ví dụ: Angular, ReactJS" />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>Trình độ:</label>
+              <p-select [options]="skillLevels" [(ngModel)]="skill.level" placeholder="Chọn trình độ" optionLabel="label" optionValue="value"></p-select>
+            </div>
+            <div class="flex flex-col gap-2 md:col-span-2">
+              <label>Mô tả:</label>
+              <textarea pInputTextarea rows="2" [(ngModel)]="skill.description" placeholder="Mô tả chi tiết..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ngoại ngữ -->
+    <div class="border-t pt-4 mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="flex items-center gap-2 cursor-pointer" (click)="toggleSection('languages')">
+          <i class="pi text-lg" [ngClass]="expandedSections.languages ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+          <h3 class="text-lg font-semibold">{{'PROFILE.FOREIGN_LANGUAGE' | translate}}</h3>
+        </div>
+        <button pButton icon="pi pi-plus" class="p-button-sm" label="Thêm" (click)="addLanguage()"></button>
+      </div>
+      <div *ngIf="expandedSections.languages" class="pl-6">
+        <div *ngFor="let lang of dataUpdate.foreignLanguages; let i = index" class="bg-surface-50 dark:bg-surface-800 p-3 rounded mb-2">
+          <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">Ngoại ngữ {{i + 1}}</h4>
+            <button pButton icon="pi pi-trash" class="p-button-sm p-button-text p-button-danger" (click)="removeLanguage(i)"></button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="flex flex-col gap-2">
+              <label>Ngôn ngữ:</label>
+              <input pInputText type="text" [(ngModel)]="lang.language" placeholder="Ví dụ: Tiếng Anh" />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>Trình độ:</label>
+              <p-select [options]="languageLevels" [(ngModel)]="lang.level" placeholder="Chọn trình độ" optionLabel="label" optionValue="value"></p-select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dự án -->
+    <div class="border-t pt-4 mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="flex items-center gap-2 cursor-pointer" (click)="toggleSection('projects')">
+          <i class="pi text-lg" [ngClass]="expandedSections.projects ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+          <h3 class="text-lg font-semibold">{{'PROFILE.PROJECTS' | translate}}</h3>
+        </div>
+        <button pButton icon="pi pi-plus" class="p-button-sm" label="Thêm" (click)="addProject()"></button>
+      </div>
+      <div *ngIf="expandedSections.projects" class="pl-6">
+        <div *ngFor="let project of dataUpdate.projects; let i = index" class="bg-surface-50 dark:bg-surface-800 p-3 rounded mb-2">
+          <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">Dự án {{i + 1}}</h4>
+            <button pButton icon="pi pi-trash" class="p-button-sm p-button-text p-button-danger" (click)="removeProject(i)"></button>
+          </div>
+          <div class="grid grid-cols-1 gap-3">
+            <div class="flex flex-col gap-2">
+              <label>Tên dự án:</label>
+              <input pInputText type="text" [(ngModel)]="project.name" placeholder="Ví dụ: Hệ thống quản lý" />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>Công nghệ:</label>
+              <p-chips [(ngModel)]="project.technologies" placeholder="Nhấn Enter để thêm" separator=","></p-chips>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>Mô tả:</label>
+              <textarea pInputTextarea rows="3" [(ngModel)]="project.description" placeholder="Mô tả dự án..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Giải thưởng -->
+    <div class="border-t pt-4 mb-4">
+      <div class="flex justify-between items-center mb-3">
+        <div class="flex items-center gap-2 cursor-pointer" (click)="toggleSection('awards')">
+          <i class="pi text-lg" [ngClass]="expandedSections.awards ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+          <h3 class="text-lg font-semibold">{{'PROFILE.AWARDS' | translate}}</h3>
+        </div>
+        <button pButton icon="pi pi-plus" class="p-button-sm" label="Thêm" (click)="addAward()"></button>
+      </div>
+      <div *ngIf="expandedSections.awards" class="pl-6">
+        <div *ngFor="let award of dataUpdate.awards; let i = index" class="bg-surface-50 dark:bg-surface-800 p-3 rounded mb-2">
+          <div class="flex justify-between items-start mb-2">
+            <h4 class="font-semibold">Giải thưởng {{i + 1}}</h4>
+            <button pButton icon="pi pi-trash" class="p-button-sm p-button-text p-button-danger" (click)="removeAward(i)"></button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="flex flex-col gap-2">
+              <label>Tên giải thưởng:</label>
+              <input pInputText type="text" [(ngModel)]="award.title" placeholder="Ví dụ: Nhân viên xuất sắc" />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label>Đơn vị trao:</label>
+              <input pInputText type="text" [(ngModel)]="award.issuer" placeholder="Ví dụ: FPT Software" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="flex gap-2">
+        <p-button styleClass="p-button-danger btn-medium" label="{{'PROFILE.CANCEL' | translate}}" (click)="closeModalEditProfile()" />
+        <p-button styleClass="btn-medium" label="{{'PROFILE.SAVE' | translate}}" (click)="saveModalEditProfile()" />
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>
 
 </div>

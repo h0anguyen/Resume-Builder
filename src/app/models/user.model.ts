@@ -1,8 +1,8 @@
 export interface Education {
   school: string;
   degree: string;
-  startYear: number;
-  endYear: number;
+  startDate: string;
+  endDate: string;
 }
 
 export interface WorkExperience {
@@ -12,6 +12,12 @@ export interface WorkExperience {
   endDate: string;
   description: string;
 }
+
+export interface Skill {
+  skill: string;
+  description: string;
+  level: string; 
+};
 
 export interface ForeignLanguage {
   language: string;
@@ -29,6 +35,20 @@ export interface Award {
   issuer: string;
 }
 
+export interface AIEvaluate {
+  total_score: number;
+  section_scores: {
+    education: number;
+    experience: number;
+    skills: number;
+    projects: number;
+  };
+  strengths: string[];
+  weaknesses: string[];
+  suggestions: string[];
+  ats_readiness: string;
+  update_time: string;
+}
 export interface User {
   _id?: string;
   username: string;
@@ -37,7 +57,8 @@ export interface User {
   password?: string;
   name?: string;
   phone?: string;
-  role?: 'User' | 'Administrator' | 'Moderator';
+  role?: string; // vị trí ứng tuyển
+  level?: string;
   avatar?: string;
   address?: string;
   joinedAt?: Date;
@@ -45,10 +66,11 @@ export interface User {
   aboutMe?: string;
   education?: Education[];
   workExperience?: WorkExperience[];
-  skills?: string[];
+  skills?: Skill[];
   foreignLanguages?: ForeignLanguage[];
   projects?: Project[];
   awards?: Award[];
+  AIEvaluate?: AIEvaluate;
   createdAt?: Date;
   updatedAt?: Date;
 }
