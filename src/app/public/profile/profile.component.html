@@ -170,7 +170,6 @@
       <h2 class="text-2xl  layout-menuitem-root-text">
         {{'PROFILE.ABOUT_ME' | translate }}
       </h2>
-      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
     </div>
     <div class="p-4 space-y-2 text-sm text-surface-900 dark:text-surface-0">
       {{user.aboutMe}}
@@ -182,7 +181,6 @@
       <h2 class="text-2xl  layout-menuitem-root-text">
         {{'PROFILE.EDUCATION' | translate }}
       </h2>
-      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
     </div>
     <div class="p-4 space-y-2 text-sm text-gray-700">
       <div *ngFor="let edu of user.education">
@@ -198,7 +196,6 @@
       <h2 class="text-2xl layout-menuitem-root-text">
         {{'PROFILE.WORK_EXPERIENCE' | translate }}
       </h2>
-      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
     </div>
     <div class="p-4 space-y-2 text-sm text-gray-700">
       <div *ngFor="let job of user.workExperience">
@@ -214,7 +211,6 @@
       <h2 class="text-2xl layout-menuitem-root-text">
         {{'PROFILE.SKILLS' | translate }}
       </h2>
-      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary" (click)="openModalEditProfile()"></button>
     </div>
     <div class="p-4 flex flex-wrap gap-3 text-sm">
       <div *ngFor="let skill of user.skills" class="flex flex-col gap-1">
@@ -244,7 +240,6 @@
       <h2 class="text-2xl  layout-menuitem-root-text">
         {{'PROFILE.FOREIGN_LANGUAGE' | translate }}
       </h2>
-      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
     </div>
     <div class="p-4 space-y-1 text-sm text-gray-700">
       <div *ngFor="let lang of user.foreignLanguages">
@@ -259,7 +254,6 @@
       <h2 class="text-2xl  layout-menuitem-root-text">
         {{'PROFILE.PROJECTS' | translate }}
       </h2>
-      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
     </div>
     <div class="p-4 space-y-3 text-sm text-gray-700">
       <div *ngFor="let project of user.projects">
@@ -277,7 +271,6 @@
       <h2 class="text-2xl  layout-menuitem-root-text">
         {{'PROFILE.AWARDS' | translate }}
       </h2>
-      <button pButton icon="pi pi-pencil" class="p-button-sm p-button-text text-primary"></button>
     </div>
     <div class="p-4 space-y-2 text-sm text-gray-700">
       <div *ngFor="let award of user.awards">
